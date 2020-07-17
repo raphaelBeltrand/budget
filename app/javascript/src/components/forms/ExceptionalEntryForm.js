@@ -12,6 +12,7 @@ import {
   MenuItem,
   Box,
   Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import { MiniSpacer, MediumSpacer } from "../Spacers";
 import NumberFormat from "react-number-format";
@@ -89,6 +90,7 @@ const ExceptionalEntryForm = ({
   onClose,
   onSubmit,
   validateButtonLabel,
+  loading,
 }) => {
   return (
     <Form
@@ -219,9 +221,13 @@ const ExceptionalEntryForm = ({
           <MediumSpacer />
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>
-            <Button color="primary" variant="contained" type="submit">
-              {validateButtonLabel}
-            </Button>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Button color="primary" variant="contained" type="submit">
+                {validateButtonLabel}
+              </Button>
+            )}
           </DialogActions>
         </form>
       )}

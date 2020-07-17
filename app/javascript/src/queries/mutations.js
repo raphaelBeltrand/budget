@@ -25,6 +25,7 @@ export const NEW_EXCEPTIONAL_ENTRY = gql`
         id
         label
         value
+        kind
         month
         year
       }
@@ -40,6 +41,7 @@ export const UPDATE_EXCEPTIONAL_ENTRY = gql`
         id
         label
         value
+        kind
         month
         year
       }

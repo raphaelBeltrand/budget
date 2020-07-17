@@ -25,19 +25,19 @@ const makeTheme = (type) => {
     palette: {
       background,
       primary: {
-        main: "#0c8cff",
+        main: "#858DFF",
       },
       secondary: {
-        main: "#fe94d0",
+        main: "#FFE06B",
       },
       danger: {
-        main: "#ff6666",
+        main: "#FF3D3B",
       },
       positive: {
-        main: "#1CFA55",
+        main: "#36FF73",
       },
       negative: {
-        main: "#FA1C5F",
+        main: "#FF3D3B",
       },
       type: type,
     },

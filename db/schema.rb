@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_120244) do
+ActiveRecord::Schema.define(version: 2020_07_17_154117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_120244) do
     t.integer "end_year"
     t.integer "end_month"
     t.uuid "parent_entry_id"
+    t.integer "periodicity", default: 1, null: false
     t.index ["parent_entry_id"], name: "index_recurrent_entries_on_parent_entry_id"
     t.index ["user_id"], name: "index_recurrent_entries_on_user_id"
   end

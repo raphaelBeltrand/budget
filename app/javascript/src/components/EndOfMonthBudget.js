@@ -7,6 +7,8 @@ import useCurrentSession from "./useCurrentSession";
 import { useQuery } from "@apollo/client";
 import { months } from "./Constants";
 import TimeSelector from "./TimeSelector";
+import { MainContext } from "../contexts/MainContext";
+import { shouldRefreshOff } from "../services/mainActions";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -36,12 +38,15 @@ const styles = (theme) => ({
 
 const EndOfMonthBudget = ({ classes }) => {
   const currentSession = useCurrentSession();
-  // eslint-disable-next-line
+  const { shouldRefresh, dispatch } = React.useContext(MainContext);
   const { data, loading, error, refetch } = useQuery(GET_BUDGET_FOR_SELECTED_MONTH);
 
   React.useEffect(() => {
-    refetch();
-  }, [currentSession?.user]);
+    if (shouldRefresh) {
+      refetch();
+      dispatch(shouldRefreshOff());
+    }
+  }, [shouldRefresh]);
 
   return (
     <Grid container className={classes.flexGrid}>

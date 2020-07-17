@@ -3,6 +3,8 @@ import { withStyles, Dialog, DialogTitle } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
 import { NEW_EXCEPTIONAL_ENTRY } from "../../queries/mutations";
 import ExceptionalEntryForm from "./ExceptionalEntryForm";
+import { MainContext } from "../../contexts/MainContext";
+import { shouldRefreshOff, shouldRefresh, setSuccessSnack } from "../../services/mainActions";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -30,20 +32,25 @@ const styles = (theme) => ({
 });
 
 const ExceptionalEntryNewDialog = ({ open, onClose, kind }) => {
-  const [newExceptionalEntry] = useMutation(NEW_EXCEPTIONAL_ENTRY, {
+  const { dispatch } = React.useContext(MainContext);
+  const [newExceptionalEntry, { loading: mutationLoading }] = useMutation(NEW_EXCEPTIONAL_ENTRY, {
     onCompleted: () => {
       onClose();
-      dispatchEvent(setSuccessSnack("Entry added!"));
+      dispatch(shouldRefresh());
+      dispatch(setSuccessSnack("Entry added!"));
     },
   });
 
   let dialogTitle = undefined;
+  let formKind = undefined;
   switch (kind) {
     case "exceptionalPositive":
       dialogTitle = "Add a one-timey income";
+      formKind = "positive";
       break;
     case "exceptionalNegative":
       dialogTitle = "Add a one-timey outcome";
+      formKind = "negative";
       break;
   }
 
@@ -52,6 +59,7 @@ const ExceptionalEntryNewDialog = ({ open, onClose, kind }) => {
     value: null,
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
+    kind: formKind,
   };
 
   return (
@@ -62,6 +70,7 @@ const ExceptionalEntryNewDialog = ({ open, onClose, kind }) => {
         onSubmit={(data) => newExceptionalEntry({ variables: { input: data } })}
         onClose={onClose}
         validateButtonLabel="Add"
+        loading={mutationLoading}
       />
     </Dialog>
   );

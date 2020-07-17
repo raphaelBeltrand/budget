@@ -14,6 +14,8 @@ import { useQuery, useMutation } from "@apollo/client";
 import { months, years } from "./Constants";
 import { UPDATE_SELECTED_MONTH, UPDATE_SELECTED_YEAR } from "../queries/mutations";
 import { GET_SESSION } from "../queries/globalQueries";
+import { MainContext } from "../contexts/MainContext";
+import { shouldRefresh } from "../services/mainActions";
 
 const styles = (theme) => ({
   flexTitle: {
@@ -29,6 +31,7 @@ const styles = (theme) => ({
 
 const TimeSelector = ({ classes }) => {
   const currentSession = useCurrentSession();
+  const { dispatch } = React.useContext(MainContext);
   const [currentMonth, setCurrentMonth] = React.useState(
     currentSession?.user.selectedMonth || new Date().getMonth() + 1
   );
@@ -48,6 +51,7 @@ const TimeSelector = ({ classes }) => {
         },
       });
     },
+    onCompleted: () => dispatch(shouldRefresh()),
   });
   const [updateSelectedYear] = useMutation(UPDATE_SELECTED_YEAR, {
     update(cache, { data: { updateSelectedYear } }) {
@@ -62,6 +66,7 @@ const TimeSelector = ({ classes }) => {
         },
       });
     },
+    onCompleted: () => dispatch(shouldRefresh()),
   });
 
   React.useEffect(() => {

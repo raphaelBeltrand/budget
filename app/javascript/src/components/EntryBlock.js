@@ -7,12 +7,16 @@ import {
   IconButton,
   CircularProgress,
 } from "@material-ui/core";
-import { Add as AddIcon } from "@material-ui/icons";
+import { Add as AddIcon, Create as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 import { MiniSpacer } from "./Spacers";
 import NumberFormat from "react-number-format";
 import AddEntryDialog from "./forms/ExceptionalEntryForm";
 import { MainContext } from "../contexts/MainContext";
-import { setNewEntryDialogOpen, setUpdateEntryDialogOpen } from "../services/mainActions";
+import {
+  setNewEntryDialogOpen,
+  setUpdateEntryDialogOpen,
+  shouldRefreshOff,
+} from "../services/mainActions";
 import { useQuery } from "@apollo/client";
 import useCurrentSession from "./useCurrentSession";
 
@@ -31,6 +35,17 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  flexRight: {
+    display: "flex",
+    alignItems: "center",
+  },
+  flexItem: {
+    padding: theme.spacing(1),
+  },
+  flexItemDanger: {
+    padding: theme.spacing(1),
+    color: theme.palette.danger.main,
   },
   separator: {
     width: "30%",
@@ -53,13 +68,16 @@ const setDialogTitle = (kind) => {
 };
 
 const EntryBlock = ({ classes, kind, query, variables }) => {
-  const { dispatch } = React.useContext(MainContext);
+  const { shouldRefresh, dispatch } = React.useContext(MainContext);
   const { data, loading, error, refetch } = useQuery(query, { variables });
   const currentSession = useCurrentSession();
 
   React.useEffect(() => {
-    refetch();
-  }, [currentSession?.user]);
+    if (shouldRefresh) {
+      refetch();
+      dispatch(shouldRefreshOff());
+    }
+  }, [shouldRefresh]);
 
   const dialogTitle = setDialogTitle(kind);
 
@@ -82,22 +100,32 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
           <MiniSpacer />
           <hr className={classes.separator} />
           {entries && entries.length > 0 ? (
-            entries.map((action) => (
-              <div key={action.id} className={classes.flexRow}>
+            entries.map((entry) => (
+              <div key={entry.id} className={classes.flexRow}>
                 <Typography variant="h6">
-                  {kind.match(/^exceptional/) ? action.label : action.parentEntry.label}
+                  {kind.match(/^exceptional/) ? entry.label : entry.parentEntry.label}
                 </Typography>
-                <div>
-                  <Typography variant="h6">
+                <div className={classes.flexRight}>
+                  <Typography variant="h6" className={classes.flexItem}>
                     <NumberFormat
-                      value={action.value}
+                      value={entry.value}
                       displayType={"text"}
                       thousandSeparator
                       suffix={" €"}
                     />
                   </Typography>
-                  <IconButton onClick={() => dispatch(setUpdateEntryDialogOpen(entry, kind))}>
-                    <AddIcon />
+                  <IconButton
+                    onClick={() => dispatch(setUpdateEntryDialogOpen(entry, kind))}
+                    className={classes.flexItem}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => dispatch(setUpdateEntryDialogOpen(entry, kind))}
+                    className={classes.flexItemDanger}
+                  >
+                    {/* TODO DISPATCH DELETE */}
+                    <DeleteIcon />
                   </IconButton>
                 </div>
               </div>

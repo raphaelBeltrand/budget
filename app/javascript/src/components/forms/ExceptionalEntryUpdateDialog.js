@@ -2,7 +2,9 @@ import { Dialog, DialogTitle, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { UPDATE_EXCEPTIONAL_ENTRY } from "../../queries/mutations";
 import ExceptionalEntryForm from "./ExceptionalEntryForm";
-import { setSuccessSnack } from "../../services/mainActions";
+import { setSuccessSnack, setInfoSnack, shouldRefresh } from "../../services/mainActions";
+import { MainContext } from "../../contexts/MainContext";
+import { useMutation } from "@apollo/client";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -30,13 +32,17 @@ const styles = (theme) => ({
 });
 
 const UpdateExceptionalEntryDialog = ({ open, onClose, kind }) => {
-  const { updateEntryDialogOpen } = React.useContext(MainContext);
-  const [updateExceptionalEntry] = useMutation(UPDATE_EXCEPTIONAL_ENTRY, {
-    onCompleted: () => {
-      onClose();
-      dispatchEvent(setSuccessSnack("Entry updated!"));
-    },
-  });
+  const { updateEntryDialogOpen, dispatch } = React.useContext(MainContext);
+  const [updateExceptionalEntry, { loading: mutationLoading }] = useMutation(
+    UPDATE_EXCEPTIONAL_ENTRY,
+    {
+      onCompleted: () => {
+        onClose();
+        dispatch(shouldRefresh());
+        dispatch(setSuccessSnack("Entry updated!"));
+      },
+    }
+  );
 
   let dialogTitle = undefined;
   switch (kind) {
@@ -49,6 +55,7 @@ const UpdateExceptionalEntryDialog = ({ open, onClose, kind }) => {
   }
 
   const initialValues = { ...updateEntryDialogOpen.entry };
+  delete initialValues["__typename"];
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth scroll="body">
@@ -59,7 +66,8 @@ const UpdateExceptionalEntryDialog = ({ open, onClose, kind }) => {
           updateExceptionalEntry({ variables: { input: data } })
         }
         onClose={onClose}
-        validateButonLabel="Add"
+        validateButtonLabel="Update"
+        loading={mutationLoading}
       />
     </Dialog>
   );

@@ -1,9 +1,21 @@
-import { SET_NEW_ENTRY_DIALOG_OPEN } from "./mainActions";
+import {
+  SET_NEW_ENTRY_DIALOG_OPEN,
+  SET_SUCCESS_SNACK,
+  SET_ERROR_SNACK,
+  SET_INFO_SNACK,
+  UNSET_SNACK,
+  CLOSE_NEW_ENTRY_DIALOG,
+  SET_UPDATE_ENTRY_DIALOG_OPEN,
+  CLOSE_UPDATE_ENTRY_DIALOG,
+  SHOULD_REFRESH,
+  SHOULD_REFRESH_OFF,
+} from "./mainActions";
 
 const initialState = {
   newEntryDialogOpen: null,
-  updateEntryDialogOpen: { id: null, kind: null },
+  updateEntryDialogOpen: { entry: null, kind: null },
   snack: { message: null, status: null },
+  shouldRefresh: false,
 };
 
 function reducer(state, action) {
@@ -25,6 +37,12 @@ function reducer(state, action) {
       return { ...state, updateEntryDialogOpen: { entry: action.entry, kind: action.kind } };
     case CLOSE_UPDATE_ENTRY_DIALOG:
       return { ...state, updateEntryDialogOpen: { entry: null, kind: null } };
+
+    case SHOULD_REFRESH:
+      return { ...state, shouldRefresh: true };
+    case SHOULD_REFRESH_OFF:
+      return { ...state, shouldRefresh: false };
+
     default:
       throw new Error();
   }

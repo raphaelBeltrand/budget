@@ -17,7 +17,9 @@ const styles = (theme) => ({
 });
 
 const Home = ({ classes }) => {
-  const { newEntryDialogOpen, updateEntryDialogOpen, dispatch } = React.useContext(MainContext);
+  const { newEntryDialogOpen, updateEntryDialogOpen, snack, dispatch } = React.useContext(
+    MainContext
+  );
 
   return (
     <>
@@ -68,18 +70,18 @@ const Home = ({ classes }) => {
       )}
       {updateEntryDialogOpen?.kind?.match(/^exceptional/) ? (
         <ExceptionalEntryUpdateDialog
-          open={updateEntryDialogOpen.id !== null}
+          open={updateEntryDialogOpen.entry !== null}
           onClose={() => dispatch(closeUpdateEntryDialog())}
           kind={updateEntryDialogOpen.kind}
         />
       ) : (
         <RecurrentEntryUpdateDialog
-          open={updateEntryDialogOpen.id !== null}
+          open={updateEntryDialogOpen.entry !== null}
           onClose={() => dispatch(closeUpdateEntryDialog())}
           kind={updateEntryDialogOpen.kind}
         />
       )}
-      {snackbar.message != null && <Snackbar />}
+      {snack && snack.message !== null && <Snackbar />}
     </>
   );
 };

@@ -11,6 +11,8 @@ const MainContextProvider = ({ children }) => {
       value={{
         newEntryDialogOpen: state.newEntryDialogOpen,
         updateEntryDialogOpen: state.updateEntryDialogOpen,
+        snack: state.snack,
+        shouldRefresh: state.shouldRefresh,
         dispatch,
       }}
     >

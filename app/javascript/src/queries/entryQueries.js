@@ -23,6 +23,9 @@ export const GET_EXCEPTIONAL_ENTRIES = gql`
       id
       label
       value
+      month
+      year
+      kind
     }
   }
 `;
