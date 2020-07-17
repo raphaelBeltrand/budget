@@ -10,10 +10,11 @@ import {
 import { Add as AddIcon } from "@material-ui/icons";
 import { MiniSpacer } from "./Spacers";
 import NumberFormat from "react-number-format";
-import AddEntryDialog from "./AddEntryDialog";
+import AddEntryDialog from "./forms/ExceptionalEntryForm";
 import { MainContext } from "../contexts/MainContext";
-import { setEntryDialogOpen } from "../services/mainActions";
-import { useQuery } from "react-apollo";
+import { setNewEntryDialogOpen, setUpdateEntryDialogOpen } from "../services/mainActions";
+import { useQuery } from "@apollo/client";
+import useCurrentSession from "./useCurrentSession";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -53,10 +54,14 @@ const setDialogTitle = (kind) => {
 
 const EntryBlock = ({ classes, kind, query, variables }) => {
   const { dispatch } = React.useContext(MainContext);
-  const { data, loading, error } = useQuery(query, { variables });
+  const { data, loading, error, refetch } = useQuery(query, { variables });
+  const currentSession = useCurrentSession();
+
+  React.useEffect(() => {
+    refetch();
+  }, [currentSession?.user]);
 
   const dialogTitle = setDialogTitle(kind);
-  console.log(data, loading, error);
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography>Error</Typography>;
@@ -70,7 +75,7 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
         <Paper elevation={2} className={classes.paper}>
           <div className={classes.flexGrid}>
             <Typography variant="h5">{dialogTitle}</Typography>
-            <IconButton onClick={() => dispatch(setEntryDialogOpen(kind))}>
+            <IconButton onClick={() => dispatch(setNewEntryDialogOpen(kind))}>
               <AddIcon />
             </IconButton>
           </div>
@@ -78,16 +83,23 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
           <hr className={classes.separator} />
           {entries && entries.length > 0 ? (
             entries.map((action) => (
-              <div key={action.label} className={classes.flexRow}>
-                <Typography variant="h6">{action.label}</Typography>
+              <div key={action.id} className={classes.flexRow}>
                 <Typography variant="h6">
-                  <NumberFormat
-                    value={action.value}
-                    displayType={"text"}
-                    thousandSeparator
-                    suffix={" €"}
-                  />
+                  {kind.match(/^exceptional/) ? action.label : action.parentEntry.label}
                 </Typography>
+                <div>
+                  <Typography variant="h6">
+                    <NumberFormat
+                      value={action.value}
+                      displayType={"text"}
+                      thousandSeparator
+                      suffix={" €"}
+                    />
+                  </Typography>
+                  <IconButton onClick={() => dispatch(setUpdateEntryDialogOpen(entry, kind))}>
+                    <AddIcon />
+                  </IconButton>
+                </div>
               </div>
             ))
           ) : (

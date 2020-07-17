@@ -1,11 +1,7 @@
 import * as React from "react";
 import {
   Grid,
-  Paper,
-  Typography,
   withStyles,
-  Dialog,
-  DialogTitle,
   DialogContent,
   FormControl,
   InputLabel,
@@ -15,9 +11,9 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { MiniSpacer, MediumSpacer } from "./Spacers";
+import { MiniSpacer, MediumSpacer } from "../Spacers";
 import NumberFormat from "react-number-format";
-import { months, years, periodicities } from "./Constants";
+import { months, years, periodicities } from "../Constants";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -88,8 +84,7 @@ const AddEntryDialog = ({ classes, open, onClose, kind }) => {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth scroll="body">
-      <DialogTitle>{dialogTitle}</DialogTitle>
+    <>
       <DialogContent>
         <TextField
           fullWidth
@@ -135,7 +130,9 @@ const AddEntryDialog = ({ classes, open, onClose, kind }) => {
                 }}
               >
                 {months.map((month) => (
-                  <MenuItem value={month.value}>{month.label}</MenuItem>
+                  <MenuItem key={month.value} value={month.value}>
+                    {month.label}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -161,7 +158,9 @@ const AddEntryDialog = ({ classes, open, onClose, kind }) => {
                 label="Start Year"
               >
                 {years.map((year) => (
-                  <MenuItem value={year}>{year}</MenuItem>
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -188,7 +187,9 @@ const AddEntryDialog = ({ classes, open, onClose, kind }) => {
             }}
           >
             {periodicities.map((item) => (
-              <MenuItem value={item.value}>{item.label}</MenuItem>
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -200,7 +201,7 @@ const AddEntryDialog = ({ classes, open, onClose, kind }) => {
           Save
         </Button>
       </DialogActions>
-    </Dialog>
+    </>
   );
 };
 

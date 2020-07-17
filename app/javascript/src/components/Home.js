@@ -3,17 +3,21 @@ import { Grid, withStyles } from "@material-ui/core";
 import { SuperSpacer } from "./Spacers";
 import EndOfMonthBudget from "./EndOfMonthBudget";
 import EntryBlock from "./EntryBlock";
-import AddEntryDialog from "./AddEntryDialog";
-import { setEntryDialogOpen } from "../services/mainActions";
+import { closeNewEntryDialog, closeUpdateEntryDialog } from "../services/mainActions";
 import { MainContext } from "../contexts/MainContext";
 import { GET_RECURRING_ENTRIES, GET_EXCEPTIONAL_ENTRIES } from "../queries/entryQueries";
+import RecurrentEntryNewDialog from "./forms/RecurrentEntryNewDialog";
+import ExceptionalEntryNewDialog from "./forms/ExceptionalEntryNewDialog";
+import RecurrentEntryUpdateDialog from "./forms/RecurrentEntryUpdateDialog";
+import ExceptionalEntryUpdateDialog from "./forms/ExceptionalEntryUpdateDialog";
+import Snackbar from "./Snackbar";
 
 const styles = (theme) => ({
   paddedGrid: { paddingLeft: theme.spacing(5), paddingRight: theme.spacing(5) },
 });
 
 const Home = ({ classes }) => {
-  const { entryDialogOpen, dispatch } = React.useContext(MainContext);
+  const { newEntryDialogOpen, updateEntryDialogOpen, dispatch } = React.useContext(MainContext);
 
   return (
     <>
@@ -49,11 +53,33 @@ const Home = ({ classes }) => {
           }}
         />
       </Grid>
-      <AddEntryDialog
-        open={!!entryDialogOpen}
-        onClose={() => dispatch(setEntryDialogOpen(null))}
-        kind={entryDialogOpen}
-      />
+      {newEntryDialogOpen?.match(/^exceptional/) ? (
+        <ExceptionalEntryNewDialog
+          open={!!newEntryDialogOpen}
+          onClose={() => dispatch(closeNewEntryDialog())}
+          kind={newEntryDialogOpen}
+        />
+      ) : (
+        <RecurrentEntryNewDialog
+          open={!!newEntryDialogOpen}
+          onClose={() => dispatch(closeNewEntryDialog())}
+          kind={newEntryDialogOpen}
+        />
+      )}
+      {updateEntryDialogOpen?.kind?.match(/^exceptional/) ? (
+        <ExceptionalEntryUpdateDialog
+          open={updateEntryDialogOpen.id !== null}
+          onClose={() => dispatch(closeUpdateEntryDialog())}
+          kind={updateEntryDialogOpen.kind}
+        />
+      ) : (
+        <RecurrentEntryUpdateDialog
+          open={updateEntryDialogOpen.id !== null}
+          onClose={() => dispatch(closeUpdateEntryDialog())}
+          kind={updateEntryDialogOpen.kind}
+        />
+      )}
+      {snackbar.message != null && <Snackbar />}
     </>
   );
 };

@@ -4,8 +4,15 @@ export const GET_RECURRING_ENTRIES = gql`
   query RecurringEntries($kind: String!) {
     entries: recurringEntries(kind: $kind) {
       id
-      label
       value
+      startMonth
+      startYear
+      endMonth
+      endYear
+      parentEntry {
+        id
+        label
+      }
     }
   }
 `;
@@ -15,6 +22,15 @@ export const GET_EXCEPTIONAL_ENTRIES = gql`
     entries: exceptionalEntries(kind: $kind) {
       id
       label
+      value
+    }
+  }
+`;
+
+export const GET_BUDGET_FOR_SELECTED_MONTH = gql`
+  query MonthlyBudget {
+    budget: monthlyBudget {
+      id
       value
     }
   }

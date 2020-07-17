@@ -1,7 +1,7 @@
 import React from "react";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ApolloProvider, withApollo, Query } from "react-apollo";
+import { ApolloProvider, useQuery } from "@apollo/client";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import apolloClient from "../apolloClient";
@@ -9,11 +9,8 @@ import AppRouter from "./AppRouter";
 import themeSelector from "../themeSelector";
 import DateFnsUtils from "@date-io/date-fns";
 
-import { GET_SESSION, GET_THEME } from "../queries/globalQueries";
-
 const makeTheme = (type) => {
-  const background =
-    type === "dark" ? { paper: "#222", default: "#333" } : { paper: "#fefefe", default: "#fff" };
+  const background = { paper: "#fefefe", default: "#fff" };
 
   return createMuiTheme({
     typography: {
@@ -54,61 +51,15 @@ const makeTheme = (type) => {
   });
 };
 
-class App extends React.Component {
-  state = {
-    loaded: false,
-  };
-
-  componentDidMount() {
-    const token = localStorage.getItem("token");
-    if (!token || token === "null") {
-      this.setState({ loaded: true });
-    }
-
-    this.props.client
-      .query({
-        query: GET_SESSION,
-      })
-      .then(({ data }) => {
-        if (data.session) {
-          themeSelector(data.session.user.theme);
-        } else {
-          localStorage.getItem("token", null);
-        }
-        this.setState({ loaded: true });
-      });
-  }
-
-  render() {
-    if (!this.state.loaded) {
-      return null;
-    }
-
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <AppRouter />
-      </React.Fragment>
-    );
-  }
-}
-
-const ConnectedApp = withApollo(App);
-
-export default class AppBootstrap extends React.Component {
-  render() {
-    return (
-      <ApolloProvider client={apolloClient}>
-        <Query query={GET_THEME}>
-          {({ data, loading, error }) => (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <MuiThemeProvider theme={makeTheme(data.theme)}>
-                <ConnectedApp />
-              </MuiThemeProvider>
-            </MuiPickersUtilsProvider>
-          )}
-        </Query>
-      </ApolloProvider>
-    );
-  }
-}
+export default () => {
+  return (
+    <ApolloProvider client={apolloClient}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <MuiThemeProvider theme={makeTheme("light")}>
+          <CssBaseline />
+          <AppRouter />
+        </MuiThemeProvider>
+      </MuiPickersUtilsProvider>
+    </ApolloProvider>
+  );
+};

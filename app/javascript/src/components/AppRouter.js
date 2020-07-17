@@ -9,7 +9,7 @@ const AppRouter = () => {
     <BrowserRouter>
       <Switch location={location}>
         <MainContextProvider>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={() => <Home />} />
         </MainContextProvider>
       </Switch>
     </BrowserRouter>

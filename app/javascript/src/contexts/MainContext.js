@@ -9,7 +9,8 @@ const MainContextProvider = ({ children }) => {
   return (
     <MainContext.Provider
       value={{
-        entryDialogOpen: state.entryDialogOpen,
+        newEntryDialogOpen: state.newEntryDialogOpen,
+        updateEntryDialogOpen: state.updateEntryDialogOpen,
         dispatch,
       }}
     >

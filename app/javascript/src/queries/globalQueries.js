@@ -1,11 +1,5 @@
 import gql from "graphql-tag";
 
-export const GET_THEME = gql`
-  query getTheme @client {
-    theme
-  }
-`;
-
 export const DELETE_SESSION = gql`
   mutation deleteSession($input: DeleteSessionInput!) {
     deleteSession(input: $input) {
@@ -35,11 +29,9 @@ export const GET_SESSION = gql`
       id
       user {
         id
-        telegramId
         name
-        isAdmin
-        isMember
-        isApplicant
+        selectedMonth
+        selectedYear
       }
     }
   }

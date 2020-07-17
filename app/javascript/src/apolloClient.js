@@ -1,8 +1,7 @@
-import ApolloClient from "apollo-boost";
-import { IntrospectionFragmentMatcher, InMemoryCache } from "apollo-cache-inmemory";
 import Cookies from "universal-cookie";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const cache = new InMemoryCache({});
+const cache = new InMemoryCache();
 
 const cookies = new Cookies();
 
@@ -10,16 +9,13 @@ let loaderCount = 0;
 const apolloClient = new ApolloClient({
   cache,
   uri: "/graphql",
-  request: (operation) => {
-    const token = localStorage.getItem("token");
-    operation.setContext({
-      headers: {
-        authorization: `Scritcher ${cookies.get("csrf-token")}`,
-        "X-CSRF-Token": cookies.get("csrf-token"),
-      },
-      credentials: "same-origin",
-    });
-  },
+  link: new HttpLink({
+    headers: {
+      authorization: `Scritcher ${cookies.get("csrf-token")}`,
+      "X-CSRF-Token": cookies.get("csrf-token"),
+    },
+    credentials: "same-origin",
+  }),
   clientState: {
     defaults: {
       theme: process.env.DEFAULT_THEME || "light",
