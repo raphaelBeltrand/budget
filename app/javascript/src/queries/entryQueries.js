@@ -5,10 +5,13 @@ export const GET_RECURRING_ENTRIES = gql`
     entries: recurringEntries(kind: $kind) {
       id
       value
+      kind
+      label
       startMonth
       startYear
       endMonth
       endYear
+      periodicity
       parentEntry {
         id
         label

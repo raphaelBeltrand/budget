@@ -42,6 +42,9 @@ const styles = (theme) => ({
   formControl: {
     width: "100%",
   },
+  errorLabel: {
+    color: theme.palette.danger.main,
+  },
 });
 
 const NumberFormatCustom = (props) => {
@@ -78,7 +81,6 @@ const validate = (values) => {
   if (!values.year) {
     errors.year = "Mandatory field";
   }
-
   return errors;
 };
 

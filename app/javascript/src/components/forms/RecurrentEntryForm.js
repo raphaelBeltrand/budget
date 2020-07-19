@@ -10,10 +10,14 @@ import {
   Button,
   Select,
   MenuItem,
+  Box,
+  Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import { MiniSpacer, MediumSpacer } from "../Spacers";
 import NumberFormat from "react-number-format";
 import { months, years, periodicities } from "../Constants";
+import { Form, Field } from "react-final-form";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -38,6 +42,9 @@ const styles = (theme) => ({
   formControl: {
     width: "100%",
   },
+  errorLabel: {
+    color: theme.palette.danger.main,
+  },
 });
 
 const NumberFormatCustom = (props) => {
@@ -60,149 +67,310 @@ const NumberFormatCustom = (props) => {
   );
 };
 
-const AddEntryDialog = ({ classes, open, onClose, kind }) => {
-  const [value, setValue] = React.useState();
-  const [label, setLabel] = React.useState("");
-  const [periodicity, setPeriodicity] = React.useState();
-  const [startMonth, setStartMonth] = React.useState(new Date().getMonth());
-  const [startYear, setStartYear] = React.useState(new Date().getFullYear());
-
-  let dialogTitle = undefined;
-  switch (kind) {
-    case "recurringPositive":
-      dialogTitle = "Add a recurring income";
-      break;
-    case "recurringNegative":
-      dialogTitle = "Add a recurring outcome";
-      break;
-    case "exceptionalPositive":
-      dialogTitle = "Add a one-timey income";
-      break;
-    case "exceptionalNegative":
-      dialogTitle = "Add a one-timey outcome";
-      break;
+const validate = (values) => {
+  const errors = {};
+  if (!values.label) {
+    errors.label = "Mandatory field";
+  }
+  if (!values.value) {
+    errors.value = "Mandatory field";
+  }
+  if (!values.startMonth) {
+    errors.startMonth = "Mandatory field";
+  }
+  if (!values.startYear) {
+    errors.startYear = "Mandatory field";
+  }
+  if (!values.endMonth) {
+    errors.endMonth = "Mandatory field";
+  }
+  if (!values.endYear) {
+    errors.endYear = "Mandatory field";
+  }
+  if (!values.periodicity) {
+    errors.periodicity = "Mandatory field";
+  }
+  if (values.startMonth && values.startYear && values.endMonth && values.endYear) {
+    if (values.startYear === values.endYear && values.startMonth > values.endMonth)
+      errors.endMonth = "Start time must be anterior to end time!";
+    else if (values.startYear > values.endYear)
+      errors.endMonth = "Start time must be anterior to end time!";
   }
 
+  return errors;
+};
+
+const parse = (value) => (isNaN(parseFloat(value)) ? "" : parseFloat(value));
+
+const RecurrentEntryForm = ({
+  classes,
+  initialValues,
+  onClose,
+  onSubmit,
+  validateButtonLabel,
+  loading,
+}) => {
   return (
-    <>
-      <DialogContent>
-        <TextField
-          fullWidth
-          placeholder="Label"
-          variant="outlined"
-          onChange={(e) => setLabel(e.target.value)}
-          value={label}
-        />
-        <MiniSpacer />
-        <TextField
-          fullWidth
-          value={value}
-          placeholder="Value"
-          onChange={(e) => setValue(e.target.value)}
-          name="numberformat"
-          variant="outlined"
-          id="formatted-numberformat-input"
-          InputProps={{
-            inputComponent: NumberFormatCustom,
-            endAdornment: " €",
-          }}
-        />
-        <MiniSpacer />
-        <Grid spacing={1} container>
-          <Grid item xs={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="monthLabel">Start month</InputLabel>
-              <Select
-                labelId="monthLabel"
-                value={startMonth}
-                onChange={(e) => setStartMonth(e.target.value)}
-                label="Start Month"
-                MenuProps={{
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "left",
-                  },
-                  transformOrigin: {
-                    vertical: "top",
-                    horizontal: "left",
-                  },
-                  getContentAnchorEl: null,
-                }}
-              >
-                {months.map((month) => (
-                  <MenuItem key={month.value} value={month.value}>
-                    {month.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="yearLabel">Start Year</InputLabel>
-              <Select
-                MenuProps={{
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "left",
-                  },
-                  transformOrigin: {
-                    vertical: "top",
-                    horizontal: "left",
-                  },
-                  getContentAnchorEl: null,
-                }}
-                labelId="yearLabel"
-                value={startYear}
-                onChange={(e) => setStartYear(e.target.value)}
-                label="Start Year"
-              >
-                {years.map((year) => (
-                  <MenuItem key={year} value={year}>
-                    {year}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <MiniSpacer />
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="periodicity">Periodicity</InputLabel>
-          <Select
-            labelId="periodicity"
-            value={periodicity}
-            onChange={(e) => setPeriodicity(e.target.value)}
-            label="periodicity"
-            MenuProps={{
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "left",
-              },
-              transformOrigin: {
-                vertical: "top",
-                horizontal: "left",
-              },
-              getContentAnchorEl: null,
-            }}
-          >
-            {periodicities.map((item) => (
-              <MenuItem key={item.value} value={item.value}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </DialogContent>
-      <MediumSpacer />
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="primary" variant="contained">
-          Save
-        </Button>
-      </DialogActions>
-    </>
+    <Form
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
+            <Field
+              name="label"
+              fullWidth
+              placeholder="Label"
+              variant="outlined"
+              render={({ input, meta }) => (
+                <>
+                  <TextField {...input} fullWidth placeholder="Label" variant="outlined" />
+                  {meta.touched && meta.error && (
+                    <Box pt={1}>
+                      <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                    </Box>
+                  )}
+                </>
+              )}
+            />
+            <MiniSpacer />
+            <hr />
+            <MiniSpacer />
+            <Grid spacing={1} container>
+              <Grid item xs={6}>
+                <Field
+                  name="value"
+                  parse={parse}
+                  render={({ input, meta }) => (
+                    <>
+                      <TextField
+                        {...input}
+                        fullWidth
+                        placeholder="Value"
+                        variant="outlined"
+                        InputProps={{
+                          inputComponent: NumberFormatCustom,
+                          endAdornment: " €",
+                        }}
+                      />
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Field
+                  name="periodicity"
+                  render={({ input, meta }) => (
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="periodicityLabel">Periodicity</InputLabel>
+                      <Select
+                        {...input}
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                        labelId="periodicityLabel"
+                        label="Periodicity"
+                      >
+                        {periodicities.map((periodicity) => (
+                          <MenuItem key={periodicity.value} value={periodicity.value}>
+                            {periodicity.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <MiniSpacer />
+            <Grid spacing={1} container>
+              <Grid item xs={6}>
+                <Field
+                  name="startMonth"
+                  render={({ input, meta }) => (
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="startMonthLabel">Start Month</InputLabel>
+                      <Select
+                        {...input}
+                        labelId="startMonthLabel"
+                        label="Start Month"
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                      >
+                        {months.map((month) => (
+                          <MenuItem key={month.value} value={month.value}>
+                            {month.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Field
+                  name="startYear"
+                  render={({ input, meta }) => (
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="startYearLabel">Start Year</InputLabel>
+                      <Select
+                        {...input}
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                        labelId="startYearLabel"
+                        label="Start Year"
+                      >
+                        {years.map((year) => (
+                          <MenuItem key={year} value={year}>
+                            {year}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <MiniSpacer />
+            <Grid spacing={1} container>
+              <Grid item xs={6}>
+                <Field
+                  name="endMonth"
+                  render={({ input, meta }) => (
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="endMonthLabel">End Month</InputLabel>
+                      <Select
+                        {...input}
+                        labelId="endMonthLabel"
+                        label="End Month"
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                      >
+                        {months.map((month) => (
+                          <MenuItem key={month.value} value={month.value}>
+                            {month.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Field
+                  name="endYear"
+                  render={({ input, meta }) => (
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="endYearLabel">End Year</InputLabel>
+                      <Select
+                        {...input}
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                        labelId="endYearLabel"
+                        label="End Year"
+                      >
+                        {years.map((year) => (
+                          <MenuItem key={year} value={year}>
+                            {year}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {meta.touched && meta.error && (
+                        <Box pt={1}>
+                          <Typography className={classes.errorLabel}>{meta.error}</Typography>
+                        </Box>
+                      )}
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <MediumSpacer />
+          <DialogActions>
+            <Button onClick={onClose}>Cancel</Button>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Button color="primary" variant="contained" type="submit">
+                {validateButtonLabel}
+              </Button>
+            )}
+          </DialogActions>
+        </form>
+      )}
+    />
   );
 };
 
-export default withStyles(styles)(AddEntryDialog);
+export default withStyles(styles)(RecurrentEntryForm);

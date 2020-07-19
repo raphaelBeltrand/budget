@@ -53,7 +53,6 @@ const UpdateExceptionalEntryDialog = ({ open, onClose, kind }) => {
       dialogTitle = "Update a one-timey outcome";
       break;
   }
-
   const initialValues = { ...updateEntryDialogOpen.entry };
   delete initialValues["__typename"];
 

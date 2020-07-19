@@ -4,6 +4,8 @@ export const SET_NEW_ENTRY_DIALOG_OPEN = `${ROOT}/SET_NEW_ENTRY_DIALOG_OPEN`;
 export const CLOSE_NEW_ENTRY_DIALOG = `${ROOT}/CLOSE_NEW_ENTRY_DIALOG`;
 export const SET_UPDATE_ENTRY_DIALOG_OPEN = `${ROOT}/SET_UPDATE_ENTRY_DIALOG_OPEN`;
 export const CLOSE_UPDATE_ENTRY_DIALOG = `${ROOT}/CLOSE_UPDATE_ENTRY_DIALOG`;
+export const SET_ENTRY_TO_DELETE = `${ROOT}/SET_ENTRY_TO_DELETE`;
+export const UNSET_ENTRY_TO_DELETE = `${ROOT}/UNSET_ENTRY_TO_DELETE`;
 export const SET_SUCCESS_SNACK = `${ROOT}/SET_SUCCESS_SNACK`;
 export const SET_ERROR_SNACK = `${ROOT}/SET_ERROR_SNACK`;
 export const SET_INFO_SNACK = `${ROOT}/SET_INFO_SNACK`;
@@ -30,19 +32,29 @@ export const closeUpdateEntryDialog = () => ({
   type: CLOSE_UPDATE_ENTRY_DIALOG,
 });
 
+export const setEntryToDelete = (entry, kind) => ({
+  type: SET_ENTRY_TO_DELETE,
+  entry,
+  kind,
+});
+
+export const unsetEntryToDelete = () => ({
+  type: UNSET_ENTRY_TO_DELETE,
+});
+
 export const setSuccessSnack = (message) => ({
   type: SET_SUCCESS_SNACK,
-  message: message,
+  message,
 });
 
 export const setErrorSnack = (message) => ({
   type: SET_ERROR_SNACK,
-  message: message,
+  message,
 });
 
 export const setInfoSnack = (message) => ({
   type: SET_INFO_SNACK,
-  message: message,
+  message,
 });
 
 export const unsetSnack = () => ({

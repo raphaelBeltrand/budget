@@ -1,7 +1,10 @@
 import * as React from "react";
 import { withStyles, Dialog, DialogTitle } from "@material-ui/core";
-import NumberFormat from "react-number-format";
+import { UPDATE_RECURRENT_ENTRY } from "../../queries/mutations";
 import RecurrentEntryForm from "./RecurrentEntryForm";
+import { MainContext } from "../../contexts/MainContext";
+import { useMutation } from "@apollo/client";
+import { shouldRefresh, setSuccessSnack } from "../../services/mainActions";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -28,27 +31,16 @@ const styles = (theme) => ({
   },
 });
 
-const NumberFormatCustom = (props) => {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      isNumericString
-    />
-  );
-};
-
 const RecurrentEntryUpdateDialog = ({ classes, open, onClose, kind }) => {
+  const { updateEntryDialogOpen, dispatch } = React.useContext(MainContext);
+  const [updateRecurrentEntry, { loading: mutationLoading }] = useMutation(UPDATE_RECURRENT_ENTRY, {
+    onCompleted: () => {
+      onClose();
+      dispatch(shouldRefresh());
+      dispatch(setSuccessSnack("Entry updated!"));
+    },
+  });
+
   let dialogTitle = undefined;
   switch (kind) {
     case "recurringPositive":
@@ -59,10 +51,22 @@ const RecurrentEntryUpdateDialog = ({ classes, open, onClose, kind }) => {
       break;
   }
 
+  const initialValues = { ...updateEntryDialogOpen.entry };
+  delete initialValues["__typename"];
+  delete initialValues["parentEntry"];
+
+  console.log(initialValues);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth scroll="body">
       <DialogTitle>{dialogTitle}</DialogTitle>
-      <RecurrentEntryForm />
+      <RecurrentEntryForm
+        initialValues={initialValues}
+        onSubmit={(data, formApi, callback) => updateRecurrentEntry({ variables: { input: data } })}
+        onClose={onClose}
+        validateButtonLabel="Update"
+        loading={mutationLoading}
+      />
     </Dialog>
   );
 };

@@ -16,6 +16,7 @@ import {
   setNewEntryDialogOpen,
   setUpdateEntryDialogOpen,
   shouldRefreshOff,
+  setEntryToDelete,
 } from "../services/mainActions";
 import { useQuery } from "@apollo/client";
 import useCurrentSession from "./useCurrentSession";
@@ -89,7 +90,7 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
 
   return (
     <>
-      <Grid item xs={3}>
+      <Grid item xs={12} lg={3}>
         <Paper elevation={2} className={classes.paper}>
           <div className={classes.flexGrid}>
             <Typography variant="h5">{dialogTitle}</Typography>
@@ -103,7 +104,8 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
             entries.map((entry) => (
               <div key={entry.id} className={classes.flexRow}>
                 <Typography variant="h6">
-                  {kind.match(/^exceptional/) ? entry.label : entry.parentEntry.label}
+                  {kind.match(/^exceptional/) ? entry.label : entry.label}
+                  {/* TODO PARENT ENTRY */}
                 </Typography>
                 <div className={classes.flexRight}>
                   <Typography variant="h6" className={classes.flexItem}>
@@ -121,10 +123,9 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
                     <EditIcon />
                   </IconButton>
                   <IconButton
-                    onClick={() => dispatch(setUpdateEntryDialogOpen(entry, kind))}
+                    onClick={() => dispatch(setEntryToDelete(entry, kind))}
                     className={classes.flexItemDanger}
                   >
-                    {/* TODO DISPATCH DELETE */}
                     <DeleteIcon />
                   </IconButton>
                 </div>

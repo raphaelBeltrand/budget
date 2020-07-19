@@ -1,5 +1,7 @@
 module Types
   class QueryType < Types::BaseObject
+   
+
     field :session, SessionType, null: true
     def session
       context[:current_session]
@@ -10,8 +12,12 @@ module Types
     end
     def recurring_entries(args)
       current_user = context[:current_user]
-      RecurrentEntry.where(kind: args[:kind]).where("(start_year < ? OR (start_year = ? AND start_month <= ?)) AND (end_year > ? OR (end_year = ? AND end_month >= ?)) ", 
-          current_user.selected_year, current_user.selected_year, current_user.selected_month, current_user.selected_year, current_user.selected_year, current_user.selected_month)
+      # Predicate to check if recurring entry is within the range of given month and year
+      @within_time_range_predicate = "(start_year < :year OR (start_year = :year AND start_month <= :month)) AND (end_year > :year OR (end_year = :year AND end_month >= :month))"
+
+      # Predicate to check if recurring entry is on the periodicity range of the given month and year
+      @on_period_predicate = "(MOD(start_month - :month, periodicity) = 0)"
+      RecurrentEntry.where(kind: args[:kind]).where(@within_time_range_predicate, {month: current_user.selected_month, year: current_user.selected_year}).where(@on_period_predicate, {month: current_user.selected_month}) 
     end
 
     field :exceptional_entries, [OneTimeEntryType], null: true do

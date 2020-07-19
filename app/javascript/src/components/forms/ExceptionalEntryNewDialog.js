@@ -5,6 +5,7 @@ import { NEW_EXCEPTIONAL_ENTRY } from "../../queries/mutations";
 import ExceptionalEntryForm from "./ExceptionalEntryForm";
 import { MainContext } from "../../contexts/MainContext";
 import { shouldRefreshOff, shouldRefresh, setSuccessSnack } from "../../services/mainActions";
+import useCurrentSession from "../useCurrentSession";
 
 const styles = (theme) => ({
   flexGrid: {
@@ -33,6 +34,7 @@ const styles = (theme) => ({
 
 const ExceptionalEntryNewDialog = ({ open, onClose, kind }) => {
   const { dispatch } = React.useContext(MainContext);
+  const currentSession = useCurrentSession();
   const [newExceptionalEntry, { loading: mutationLoading }] = useMutation(NEW_EXCEPTIONAL_ENTRY, {
     onCompleted: () => {
       onClose();
@@ -57,8 +59,8 @@ const ExceptionalEntryNewDialog = ({ open, onClose, kind }) => {
   const initialValues = {
     label: "",
     value: null,
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
+    month: currentSession?.user?.selectedMonth || new Date().getMonth() + 1,
+    year: currentSession?.user?.selectedYear || new Date().getFullYear() + 1,
     kind: formKind,
   };
 

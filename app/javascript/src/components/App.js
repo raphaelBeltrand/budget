@@ -15,8 +15,14 @@ const makeTheme = (type) => {
   return createMuiTheme({
     typography: {
       useNextVariants: true,
-      fontFamily: `'Signika', 'sans-serif'`,
-      fontWeight: 200,
+      fontFamily: `'Londrina Solid', cursive;`,
+      fontWeight: 300,
+      h4: {
+        fontWeight: 100,
+      },
+      h6: {
+        fontWeight: 300,
+      },
     },
     html: {
       fontSize: "16px",
@@ -33,18 +39,29 @@ const makeTheme = (type) => {
       danger: {
         main: "#FF3D3B",
       },
-      positive: {
-        main: "#36FF73",
-      },
-      negative: {
-        main: "#FF3D3B",
-      },
       type: type,
     },
     overrides: {
       MuiTooltip: {
         tooltip: {
           fontSize: "1em",
+        },
+      },
+      MuiInputBase: {
+        root: {
+          "& input": {
+            fontWeight: 300,
+          },
+        },
+        input: {
+          fontWeight: 300,
+        },
+      },
+      MuiSelect: {
+        root: {
+          "& input": {
+            fontWeight: 300,
+          },
         },
       },
     },

@@ -9,6 +9,8 @@ import {
   CLOSE_UPDATE_ENTRY_DIALOG,
   SHOULD_REFRESH,
   SHOULD_REFRESH_OFF,
+  SET_ENTRY_TO_DELETE,
+  UNSET_ENTRY_TO_DELETE,
 } from "./mainActions";
 
 const initialState = {
@@ -16,6 +18,7 @@ const initialState = {
   updateEntryDialogOpen: { entry: null, kind: null },
   snack: { message: null, status: null },
   shouldRefresh: false,
+  entryToDelete: null,
 };
 
 function reducer(state, action) {
@@ -37,6 +40,11 @@ function reducer(state, action) {
       return { ...state, updateEntryDialogOpen: { entry: action.entry, kind: action.kind } };
     case CLOSE_UPDATE_ENTRY_DIALOG:
       return { ...state, updateEntryDialogOpen: { entry: null, kind: null } };
+
+    case SET_ENTRY_TO_DELETE:
+      return { ...state, entryToDelete: { entry: action.entry, kind: action.kind } };
+    case UNSET_ENTRY_TO_DELETE:
+      return { ...state, entryToDelete: { entry: null, kind: null } };
 
     case SHOULD_REFRESH:
       return { ...state, shouldRefresh: true };

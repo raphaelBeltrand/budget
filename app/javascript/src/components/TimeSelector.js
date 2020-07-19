@@ -26,6 +26,7 @@ const styles = (theme) => ({
   },
   selectFont: {
     fontSize: "2rem",
+    fontWeight: 100,
   },
 });
 

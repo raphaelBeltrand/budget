@@ -9,6 +9,7 @@ const MainContextProvider = ({ children }) => {
   return (
     <MainContext.Provider
       value={{
+        entryToDelete: state.entryToDelete,
         newEntryDialogOpen: state.newEntryDialogOpen,
         updateEntryDialogOpen: state.updateEntryDialogOpen,
         snack: state.snack,
