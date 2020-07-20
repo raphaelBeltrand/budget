@@ -10,32 +10,14 @@ const token = localStorage.getItem("token");
 let loaderCount = 0;
 const apolloClient = new ApolloClient({
   cache,
-  uri: "/graphql",
   link: new HttpLink({
+    uri: "https://ezpzbudget.com/graphql",
     headers: {
       authorization: `Scritcher ${cookies.get("csrf-token")}`,
       "X-CSRF-Token": cookies.get("csrf-token"),
     },
     credentials: "same-origin",
   }),
-  clientState: {
-    defaults: {
-      theme: process.env.DEFAULT_THEME || "light",
-      pageTitle: null,
-    },
-    resolvers: {
-      Mutation: {
-        setTheme: (_, { theme }, { cache }) => {
-          cache.writeData({ data: { theme } });
-          return null;
-        },
-        setPageTitle: (_, { pageTitle }, { cache }) => {
-          cache.writeData({ data: { pageTitle } });
-          return null;
-        },
-      },
-    },
-  },
   fetch: (input, init) => {
     // this whole function is pretty ugly
 
