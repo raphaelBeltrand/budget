@@ -8,6 +8,7 @@ import {
   DialogActions,
   Button,
   CircularProgress,
+  Typography,
 } from "@material-ui/core";
 
 const styles = (theme) => ({
@@ -44,15 +45,19 @@ const ConfirmationDialog = ({
   loading,
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>{dialogTitle}</DialogTitle>
-      <DialogContent>{caption}</DialogContent>
+      <DialogContent>
+        <Typography variant="subtitle1">{caption}</Typography>
+      </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{cancelLabel}</Button>
+        <Button onClick={onClose} size="large">
+          {cancelLabel}
+        </Button>
         {loading ? (
           <CircularProgress />
         ) : (
-          <Button onClick={confirmAction} className={classes.dangerButton}>
+          <Button onClick={confirmAction} size="large" className={classes.dangerButton}>
             {confirmLabel}
           </Button>
         )}

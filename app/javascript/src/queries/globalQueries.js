@@ -29,6 +29,14 @@ export const SIGN_IN = gql`
   }
 `;
 
+export const DELETE_ACCOUNT = gql`
+  mutation deleteAccount($input: DeleteAccountInput!) {
+    deleteAccount(input: $input) {
+      errors
+    }
+  }
+`;
+
 export const GET_SESSION = gql`
   query Session {
     session {

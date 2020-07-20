@@ -66,7 +66,6 @@ const makeTheme = (type) => {
 };
 
 export default () => {
-  console.log("RENDERING APP");
   return (
     <ApolloProvider client={apolloClient}>
       <MuiThemeProvider theme={makeTheme("light")}>

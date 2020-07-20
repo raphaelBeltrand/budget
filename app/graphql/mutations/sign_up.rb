@@ -2,6 +2,7 @@ class Mutations::SignUp < Mutations::BaseMutation
     argument :username, String, required: true
     argument :password, String, required: true
     argument :password_confirm, String, required: true
+    argument :agreement, Boolean, required: true
   
     field :errors, [String], null: false
   

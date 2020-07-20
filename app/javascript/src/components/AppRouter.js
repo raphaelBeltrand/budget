@@ -11,12 +11,9 @@ import { GET_SESSION } from "../queries/globalQueries";
 import { CircularProgress } from "@material-ui/core";
 
 const AppRouter = (props) => {
-  console.log("RENDERING APP ROUTER", props);
   const { data, loading, error } = useQuery(GET_SESSION, { fetchPolicy: "cache-first" });
 
   if (loading) return <CircularProgress />;
-
-  console.log(data, error, loading);
 
   return (
     <BrowserRouter>

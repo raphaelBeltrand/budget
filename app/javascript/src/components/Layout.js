@@ -93,7 +93,7 @@ const Layout = ({ classes }) => {
         <Toolbar className={classes.toolFlex} variant="dense">
           <ProfileMenu />
           <Typography variant="h5" className={classes.title}>
-            My Little Budget
+            Easy-Peasy Budget
           </Typography>
           <IconButton className={classes.menuButton} onClick={() => dispatch(openDrawer())}>
             <BurgerMenuIcon className={classes.menuIcon} />

@@ -10,6 +10,8 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 import { Form, Field } from "react-final-form";
 import { MiniSpacer } from "../Spacers";
@@ -53,6 +55,9 @@ const validate = (values) => {
   }
   if (values.password !== values.passwordConfirm) {
     errors.passwordConfirm = "Passwords don't match";
+  }
+  if (!values.agreement) {
+    errors.agreement = "You must agree to the terms!";
   }
   return errors;
 };
@@ -143,6 +148,29 @@ const SignUpForm = ({ classes, onSubmit, loading, error }) => {
                     ),
                   }}
                 />
+              )}
+            />
+            <MiniSpacer />
+            <Field
+              name="agreement"
+              type="checkbox"
+              variant="outlined"
+              render={({ input, meta }) => (
+                <div
+                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                >
+                  <FormControlLabel
+                    label="I agree to the terms & conditions"
+                    control={<Checkbox {...input} color="primary" />}
+                  />
+                  {meta.touched && meta.error && (
+                    <Box display="flex">
+                      <Typography noWrap className={classes.errorLabel}>
+                        {meta.error}
+                      </Typography>
+                    </Box>
+                  )}
+                </div>
               )}
             />
             <MiniSpacer />
