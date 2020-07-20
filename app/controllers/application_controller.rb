@@ -12,7 +12,8 @@ class ApplicationController < ActionController::Base
     end
 
     def toto
-      {toto: "TOTO"}
+      msg = {:status => "OOOK"}
+      render :json => msg
     end
 
     protected
