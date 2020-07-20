@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     def index
     end
 
+    def toto
+      {toto: "TOTO"}
+    end
+
     protected
 
     def configure_permitted_parameters
