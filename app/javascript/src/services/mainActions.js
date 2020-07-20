@@ -12,6 +12,32 @@ export const SET_INFO_SNACK = `${ROOT}/SET_INFO_SNACK`;
 export const UNSET_SNACK = `${ROOT}/UNSET_SNACK`;
 export const SHOULD_REFRESH = `${ROOT}/SHOULD_REFRESH`;
 export const SHOULD_REFRESH_OFF = `${ROOT}/SHOULD_REFRESH_OFF`;
+export const OPEN_DRAWER = `${ROOT}/OPEN_DRAWER`;
+export const CLOSE_DRAWER = `${ROOT}/CLOSE_DRAWER`;
+export const SET_DRAWER_YEAR = `${ROOT}/SET_DRAWER_YEAR`;
+export const OPEN_MY_ACCOUNT_DIALOG = `${ROOT}/OPEN_MY_ACCOUNT_DIALOG`;
+export const CLOSE_MY_ACCOUNT_DIALOG = `${ROOT}/CLOSE_MY_ACCOUNT_DIALOG`;
+
+export const setDrawerYear = (year) => ({
+  type: SET_DRAWER_YEAR,
+  year,
+});
+
+export const openMyAccountDialog = () => ({
+  type: OPEN_MY_ACCOUNT_DIALOG,
+});
+
+export const closeMyAccountDialog = () => ({
+  type: CLOSE_MY_ACCOUNT_DIALOG,
+});
+
+export const openDrawer = () => ({
+  type: OPEN_DRAWER,
+});
+
+export const closeDrawer = () => ({
+  type: CLOSE_DRAWER,
+});
 
 export const setNewEntryDialogOpen = (kind) => ({
   type: SET_NEW_ENTRY_DIALOG_OPEN,

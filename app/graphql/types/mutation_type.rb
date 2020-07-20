@@ -15,6 +15,10 @@ module Types
       field :delete_recurrent_entry, mutation: Mutations::DeleteRecurrentEntry
       field :delete_exceptional_entry, mutation: Mutations::DeleteExceptionalEntry
 
+      field :sign_up, mutation: Mutations::SignUp
+      field :sign_in, mutation: Mutations::SignIn
+      field :sign_out, mutation: Mutations::SignOut
+
     end
   end
   

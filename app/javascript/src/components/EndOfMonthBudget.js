@@ -69,8 +69,8 @@ const EndOfMonthBudget = ({ classes, width }) => {
         </div>
         {/* <Button onClick={() => setPreviousMonth()}>Previous month</Button> */}
         <SuperSpacer />
-        {loading && <CircularProgress />}
-        {error || (!data && <Typography>Error</Typography>)}
+        {(loading || !data) && <CircularProgress />}
+        {error && <Typography>Error</Typography>}
         {data && !data.budget && <Typography>No data yet</Typography>}
         {data && data.budget && (
           <Typography

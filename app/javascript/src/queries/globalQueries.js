@@ -1,18 +1,24 @@
 import gql from "graphql-tag";
 
-export const DELETE_SESSION = gql`
-  mutation deleteSession($input: DeleteSessionInput!) {
-    deleteSession(input: $input) {
-      session {
-        id
-      }
+export const SIGN_UP = gql`
+  mutation signUp($input: SignUpInput!) {
+    signUp(input: $input) {
+      errors
     }
   }
 `;
 
-export const CREATE_SESSION = gql`
-  mutation createSession($input: CreateSessionInput!) {
-    createSession(input: $input) {
+export const SIGN_OUT = gql`
+  mutation signOut($input: SignOutInput!) {
+    signOut(input: $input) {
+      errors
+    }
+  }
+`;
+
+export const SIGN_IN = gql`
+  mutation signIn($input: SignInInput!) {
+    signIn(input: $input) {
       session {
         id
         user {
@@ -29,9 +35,10 @@ export const GET_SESSION = gql`
       id
       user {
         id
-        name
+        username
         selectedMonth
         selectedYear
+        createdAt
       }
     }
   }

@@ -105,11 +105,10 @@ const ExceptionalEntryForm = ({
             <Field
               name="label"
               fullWidth
-              placeholder="Label"
               variant="outlined"
               render={({ input, meta }) => (
                 <>
-                  <TextField {...input} fullWidth placeholder="Label" variant="outlined" />
+                  <TextField {...input} fullWidth label="Label" variant="outlined" />
                   {meta.touched && meta.error && (
                     <Box pt={1}>
                       <Typography className={classes.errorLabel}>{meta.error}</Typography>
@@ -127,7 +126,7 @@ const ExceptionalEntryForm = ({
                   <TextField
                     {...input}
                     fullWidth
-                    placeholder="Value"
+                    label="Value"
                     variant="outlined"
                     InputProps={{
                       inputComponent: NumberFormatCustom,

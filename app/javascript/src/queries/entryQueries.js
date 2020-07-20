@@ -41,3 +41,14 @@ export const GET_BUDGET_FOR_SELECTED_MONTH = gql`
     }
   }
 `;
+
+export const GET_YEAR_ENTRIES = gql`
+  query YearEntries($year: Int!) {
+    yearEntries(year: $year) {
+      id
+      value
+      month
+      year
+    }
+  }
+`;

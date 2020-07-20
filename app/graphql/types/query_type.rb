@@ -33,5 +33,14 @@ module Types
       current_user = context[:current_user]
       MonthlyBudget.find_by(user: current_user, month: current_user.selected_month, year: current_user.selected_year)
     end
+
+
+    field :year_entries, [MonthlyBudgetType], null: true do
+      argument :year, Integer, required: true
+    end
+    def year_entries(args)
+      current_user = context[:current_user]
+      MonthlyBudget.where(user: current_user, year: args[:year]).order(:month)
+    end
   end
 end

@@ -11,14 +11,22 @@ import {
   SHOULD_REFRESH_OFF,
   SET_ENTRY_TO_DELETE,
   UNSET_ENTRY_TO_DELETE,
+  OPEN_DRAWER,
+  CLOSE_DRAWER,
+  SET_DRAWER_YEAR,
+  OPEN_MY_ACCOUNT_DIALOG,
+  CLOSE_MY_ACCOUNT_DIALOG,
 } from "./mainActions";
 
 const initialState = {
+  yearForDrawer: new Date().getFullYear(),
   newEntryDialogOpen: null,
   updateEntryDialogOpen: { entry: null, kind: null },
   snack: { message: null, status: null },
   shouldRefresh: false,
   entryToDelete: null,
+  drawerOpen: false,
+  myAccountDialogOpen: false,
 };
 
 function reducer(state, action) {
@@ -50,6 +58,19 @@ function reducer(state, action) {
       return { ...state, shouldRefresh: true };
     case SHOULD_REFRESH_OFF:
       return { ...state, shouldRefresh: false };
+
+    case OPEN_DRAWER:
+      return { ...state, drawerOpen: true };
+    case CLOSE_DRAWER:
+      return { ...state, drawerOpen: false };
+
+    case OPEN_MY_ACCOUNT_DIALOG:
+      return { ...state, myAccountDialogOpen: true };
+    case CLOSE_MY_ACCOUNT_DIALOG:
+      return { ...state, myAccountDialogOpen: false };
+
+    case SET_DRAWER_YEAR:
+      return { ...state, yearForDrawer: action.year };
 
     default:
       throw new Error();

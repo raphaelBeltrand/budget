@@ -24,13 +24,11 @@ class GraphqlController < ApplicationController
   private
 
   def current_session
-    @current_session = Session.first
-    # @current_session ||= Session.find_by(uuid: cookies.signed[:token])
+    @current_session ||= Session.find_by(uuid: cookies.signed[:token])
   end
 
   def current_user
-    @current_user = User.first
-    # @current_user ||= current_session.try(:user)
+    @current_user ||= current_session.try(:user)
   end
 
   def current_user_references

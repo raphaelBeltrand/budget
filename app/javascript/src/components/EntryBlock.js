@@ -82,9 +82,9 @@ const EntryBlock = ({ classes, kind, query, variables }) => {
 
   const dialogTitle = setDialogTitle(kind);
 
-  if (loading) return <CircularProgress />;
+  if (loading || !data) return <CircularProgress />;
   if (error) return <Typography>Error</Typography>;
-  if (!data || !data.entries) return <Typography>Error</Typography>;
+  if (!data.entries) return <Typography>Error</Typography>;
 
   const entries = data.entries;
 

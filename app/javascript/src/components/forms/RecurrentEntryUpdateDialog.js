@@ -55,8 +55,6 @@ const RecurrentEntryUpdateDialog = ({ classes, open, onClose, kind }) => {
   delete initialValues["__typename"];
   delete initialValues["parentEntry"];
 
-  console.log(initialValues);
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth scroll="body">
       <DialogTitle>{dialogTitle}</DialogTitle>

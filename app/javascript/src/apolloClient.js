@@ -5,6 +5,8 @@ const cache = new InMemoryCache();
 
 const cookies = new Cookies();
 
+const token = localStorage.getItem("token");
+
 let loaderCount = 0;
 const apolloClient = new ApolloClient({
   cache,

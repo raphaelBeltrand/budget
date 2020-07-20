@@ -2,15 +2,35 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Home from "./Home";
+import Layout from "./Layout";
 import { MainContextProvider } from "../contexts/MainContext";
+import useCurrentSession from "./useCurrentSession";
+import Login from "./Login";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { GET_SESSION } from "../queries/globalQueries";
+import { CircularProgress } from "@material-ui/core";
 
-const AppRouter = () => {
+const AppRouter = (props) => {
+  console.log("RENDERING APP ROUTER", props);
+  const { data, loading, error } = useQuery(GET_SESSION, { fetchPolicy: "cache-first" });
+
+  if (loading) return <CircularProgress />;
+
+  console.log(data, error, loading);
+
   return (
     <BrowserRouter>
       <Switch location={location}>
-        <MainContextProvider>
-          <Route exact path="/" component={() => <Home />} />
-        </MainContextProvider>
+        {data && data.session ? (
+          <MainContextProvider>
+            <>
+              <Layout />
+              <Route exact path="/" component={() => <Home />} />
+            </>
+          </MainContextProvider>
+        ) : (
+          <Route exact path="/" component={() => <Login />} />
+        )}
       </Switch>
     </BrowserRouter>
   );
