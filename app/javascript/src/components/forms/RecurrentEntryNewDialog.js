@@ -64,7 +64,7 @@ const RecurrentEntryNewDialog = ({ classes, open, onClose, kind }) => {
     startMonth: currentSession?.user?.selectedMonth || new Date().getMonth() + 1,
     startYear: currentSession?.user?.selectedYear || new Date().getFullYear() + 1,
     endMonth: 12,
-    endYear: 2040,
+    endYear: 2030,
     periodicity: 1,
     kind: formKind,
   };
