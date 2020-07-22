@@ -17,15 +17,16 @@ module Types
 
       # Predicate to check if recurring entry is on the periodicity range of the given month and year
       @on_period_predicate = "(MOD(start_month - :month, periodicity) = 0)"
-      RecurrentEntry.where(kind: args[:kind]).where(@within_time_range_predicate, {month: current_user.selected_month, year: current_user.selected_year}).where(@on_period_predicate, {month: current_user.selected_month}) 
+      RecurrentEntry.where(kind: args[:kind], user: current_user)
+        .within_time_range(current_user.selected_month, year: current_user.selected_year)
+        .on_period(current_user.selected_month)
     end
 
     field :exceptional_entries, [OneTimeEntryType], null: true do
       argument :kind, String, required: true
     end
     def exceptional_entries(args)
-      current_user = context[:current_user]
-      OneTimeEntry.where(kind: args[:kind], month: current_user.selected_month, year: current_user.selected_year)
+      OneTimeEntry.where(user: context[:current_user], kind: args[:kind], month: current_user.selected_month, year: current_user.selected_year)
     end
 
     field :monthly_budget, MonthlyBudgetType, null: true
