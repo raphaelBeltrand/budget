@@ -23,10 +23,7 @@ class BudgetCalculator
 
                 # Update or create the Budget object for this user and this loop's month/year
                 budget = MonthlyBudget.find_or_create_by(month: month, year: year, user: current_user) do |budget|
-                    budget.user = current_user
-                    budget.month = month
-                    budget.year = year
-                    budget.value = 0
+                    budget.assign_attributes(user: current_user, month: month, year: year, value: 0)
                 end
 
                 budget.value = lastValue + income - outcome
