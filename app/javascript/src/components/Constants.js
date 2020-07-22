@@ -21,4 +21,5 @@ export const periodicities = [
   { label: "Every three months", value: 3 },
   { label: "Every four months", value: 4 },
   { label: "Every six months", value: 6 },
+  { label: "Every year", value: 12 },
 ];
