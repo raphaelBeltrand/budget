@@ -41,7 +41,7 @@ module Types
     end
     def year_entries(args)
       current_user = context[:current_user]
-      MonthlyBudget.where(year: args[:year]), user: current_user.order(:month)
+      MonthlyBudget.where(year: args[:year], user: current_user).order(:month)
     end
   end
 end
