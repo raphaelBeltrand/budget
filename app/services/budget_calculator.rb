@@ -38,7 +38,7 @@ class BudgetCalculator
     # Compute the total incoming money from recurring and one time entries on the current loop month
     def compute_income(year, month)
         RecurrentEntry.where(kind: "positive", user: current_user)
-                .within_time_range(month, year)
+                .within_time_range({year: year, month: month})
                 .on_period(month)
                 .pluck(:value).sum +
             OneTimeEntry.where(kind: "positive", user: current_user).where("year = ? AND month = ?", year, month).pluck(:value).sum
@@ -47,7 +47,7 @@ class BudgetCalculator
     # Compute the total outgoing money from recurring and one time entries on the current loop month
     def compute_outcome(year, month)
         RecurrentEntry.where(kind: "negative", user: current_user)
-                .within_time_range(month, year)
+                .within_time_range({year: year, month: month})
                 .on_period(month)
                 .pluck(:value).sum +
             OneTimeEntry.where(kind: "negative", user: current_user).where("year = ? AND month = ?", year, month).pluck(:value).sum
