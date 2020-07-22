@@ -26,13 +26,13 @@ module Types
       argument :kind, String, required: true
     end
     def exceptional_entries(args)
-      OneTimeEntry.where(user: context[:current_user], kind: args[:kind], month: current_user.selected_month, year: current_user.selected_year)
+      OneTimeEntry.where(kind: args[:kind], month: current_user.selected_month, year: current_user.selected_year, user: context[:current_user])
     end
 
     field :monthly_budget, MonthlyBudgetType, null: true
     def monthly_budget
       current_user = context[:current_user]
-      MonthlyBudget.find_by(user: current_user, month: current_user.selected_month, year: current_user.selected_year)
+      MonthlyBudget.find_by(month: current_user.selected_month, year: current_user.selected_year, user: current_user)
     end
 
 
@@ -41,7 +41,7 @@ module Types
     end
     def year_entries(args)
       current_user = context[:current_user]
-      MonthlyBudget.where(user: current_user, year: args[:year]).order(:month)
+      MonthlyBudget.where(year: args[:year]), user: current_user.order(:month)
     end
   end
 end
