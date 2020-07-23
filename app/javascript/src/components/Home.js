@@ -23,7 +23,7 @@ import { useMutation } from "@apollo/client";
 
 const styles = (theme) => ({
   paddedGrid: { paddingLeft: theme.spacing(5), width: "100%" },
-  paddedGridMobile: { paddingLeft: theme.spacing(5), width: "100%" },
+  paddedGridMobile: { paddingLeft: theme.spacing(1), width: "100%" },
 });
 
 const Home = ({ classes, width }) => {
@@ -57,8 +57,8 @@ const Home = ({ classes, width }) => {
       <SuperSpacer />
       <Grid
         container
-        spacing={5}
-        className={isWidthUp("lg", width) ? classes.paddedGrid : classes.paddedGridMobile}
+        spacing={isWidthUp("md", width) ? 5 : 1}
+        className={isWidthUp("md", width) ? classes.paddedGrid : classes.paddedGridMobile}
       >
         <EntryBlock
           kind="recurringPositive"

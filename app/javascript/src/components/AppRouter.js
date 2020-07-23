@@ -5,15 +5,17 @@ import Home from "./Home";
 import Layout from "./Layout";
 import { MainContextProvider } from "../contexts/MainContext";
 import useCurrentSession from "./useCurrentSession";
-import Login from "./Login";
+import Login from "./LoginDesktop";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { GET_SESSION } from "../queries/globalQueries";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, withWidth, isWidthUp } from "@material-ui/core";
+import LoginMobile from "./LoginMobile";
+import LoginPage from "./LoginPage";
 
-const AppRouter = (props) => {
+const AppRouter = () => {
   const { data, loading, error } = useQuery(GET_SESSION, { fetchPolicy: "cache-first" });
 
-  if (loading) return <CircularProgress />;
+  if (loading) return null;
 
   return (
     <BrowserRouter>
@@ -26,7 +28,7 @@ const AppRouter = (props) => {
             </>
           </MainContextProvider>
         ) : (
-          <Route exact path="/" component={() => <Login />} />
+          <Route exact path="/" component={() => <LoginPage />} />
         )}
       </Switch>
     </BrowserRouter>

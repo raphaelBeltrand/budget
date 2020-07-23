@@ -48,20 +48,17 @@ const styles = (theme) => ({
   },
 });
 
-const Login = (props) => {
-  const { classes } = props;
+const LoginDesktop = ({
+  classes,
+  error,
+  setTermsDialogOpen,
+  setPrivacyPolicyDialogOpen,
+  signUp,
+  signIn,
+  signUpLoading,
+  signInLoading,
+}) => {
   const [signType, setSignType] = React.useState("signup");
-  const [error, setError] = React.useState(undefined);
-  const [termsDialogOpen, setTermsDialogOpen] = React.useState(false);
-  const [privacyPolicyDialogOpen, setPrivacyPolicyDialogOpen] = React.useState(false);
-  const [signUp, { loading: signUpLoading }] = useMutation(SIGN_UP, {
-    onCompleted: () => location.reload(),
-    onError: (e) => setError(e.message),
-  });
-  const [signIn, { loading: signInLoading }] = useMutation(SIGN_IN, {
-    onCompleted: () => location.reload(),
-    onError: (e) => setError(e.message),
-  });
 
   return (
     <>
@@ -146,13 +143,8 @@ const Login = (props) => {
           </Grid>
         </Grid>
       </div>
-      <TermsDialog open={termsDialogOpen} onClose={() => setTermsDialogOpen(false)} />
-      <PrivacyPolicyDialog
-        open={privacyPolicyDialogOpen}
-        onClose={() => setPrivacyPolicyDialogOpen(false)}
-      />
     </>
   );
 };
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(LoginDesktop);
